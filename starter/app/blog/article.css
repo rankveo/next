@@ -1,0 +1,234 @@
+/*
+ * Styles the HTML that rankveo returns as `article.html`.
+ *
+ * This is deliberately self-contained and framework-free. The obvious
+ * alternative is Tailwind's `prose` class, but that needs
+ * `@tailwindcss/typography` to be *registered* as well as installed — and if it
+ * is not, Tailwind's preflight has already reset `h1..h6` to inherit their size
+ * and weight and stripped list markers, so the article renders as one
+ * undifferentiated wall of text. That failure is silent and easy to miss.
+ *
+ * Everything here is scoped to `.article-body`, so it cannot leak into the rest
+ * of the site, and it re-asserts the element defaults a CSS reset removes.
+ *
+ * Already using @tailwindcss/typography? Add `prose prose-neutral
+ * dark:prose-invert` to the same element and delete this file — they do the
+ * same job.
+ */
+
+.article-body {
+  --article-text: #262626;
+  --article-muted: #525252;
+  --article-rule: #e5e5e5;
+  --article-surface: #f5f5f5;
+  --article-link: #1d4ed8;
+
+  color: var(--article-text);
+  font-size: 1.0625rem;
+  line-height: 1.75;
+  overflow-wrap: break-word;
+}
+
+@media (prefers-color-scheme: dark) {
+  .article-body {
+    --article-text: #d4d4d4;
+    --article-muted: #a3a3a3;
+    --article-rule: #333333;
+    --article-surface: #1a1a1a;
+    --article-link: #93b4ff;
+  }
+}
+
+/* Headings — restored explicitly, because a reset flattens them. */
+.article-body h2,
+.article-body h3,
+.article-body h4 {
+  color: #111111;
+  font-weight: 650;
+  line-height: 1.3;
+  letter-spacing: -0.01em;
+  scroll-margin-top: 5rem;
+}
+
+@media (prefers-color-scheme: dark) {
+  .article-body h2,
+  .article-body h3,
+  .article-body h4 {
+    color: #fafafa;
+  }
+}
+
+.article-body h2 {
+  margin: 2.5rem 0 1rem;
+  font-size: 1.5rem;
+}
+.article-body h3 {
+  margin: 2rem 0 0.75rem;
+  font-size: 1.25rem;
+}
+.article-body h4 {
+  margin: 1.75rem 0 0.5rem;
+  font-size: 1.0625rem;
+}
+.article-body > *:first-child {
+  margin-top: 0;
+}
+
+.article-body p {
+  margin: 0 0 1.25rem;
+}
+
+/* Inline emphasis. */
+.article-body strong,
+.article-body b {
+  color: #111111;
+  font-weight: 650;
+}
+
+@media (prefers-color-scheme: dark) {
+  .article-body strong,
+  .article-body b {
+    color: #fafafa;
+  }
+}
+
+.article-body em,
+.article-body i {
+  font-style: italic;
+}
+
+.article-body a {
+  color: var(--article-link);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+.article-body a:hover {
+  text-decoration-thickness: 2px;
+}
+
+/* Lists — markers restored, since a reset removes them. */
+.article-body ul,
+.article-body ol {
+  margin: 0 0 1.25rem;
+  padding-left: 1.5rem;
+}
+.article-body ul {
+  list-style: disc;
+}
+.article-body ol {
+  list-style: decimal;
+}
+.article-body li {
+  margin: 0.375rem 0;
+  padding-left: 0.25rem;
+}
+.article-body li::marker {
+  color: var(--article-muted);
+}
+/* A nested list belongs to its parent item, not the paragraph flow. */
+.article-body li > ul,
+.article-body li > ol {
+  margin: 0.375rem 0 0.5rem;
+}
+
+.article-body blockquote {
+  margin: 1.5rem 0;
+  padding: 0.25rem 0 0.25rem 1.25rem;
+  border-left: 3px solid var(--article-rule);
+  color: var(--article-muted);
+  font-style: italic;
+}
+.article-body blockquote p:last-child {
+  margin-bottom: 0;
+}
+
+.article-body code {
+  padding: 0.15em 0.4em;
+  border-radius: 4px;
+  background: var(--article-surface);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 0.875em;
+}
+
+.article-body pre {
+  margin: 1.5rem 0;
+  padding: 1rem 1.25rem;
+  border-radius: 10px;
+  background: var(--article-surface);
+  /* Long lines scroll inside the block instead of widening the page. */
+  overflow-x: auto;
+}
+.article-body pre code {
+  padding: 0;
+  background: none;
+  font-size: 0.875rem;
+}
+
+/*
+ * Tables are how a comparison article earns its place, and they are also what
+ * gets lifted into featured snippets and AI answers — so they have to survive
+ * a narrow screen rather than blowing out the page width.
+ */
+.article-body .table-scroll,
+.article-body table {
+  display: block;
+  max-width: 100%;
+  overflow-x: auto;
+}
+.article-body table {
+  margin: 1.5rem 0;
+  border-collapse: collapse;
+  font-size: 0.9375rem;
+  white-space: nowrap;
+}
+.article-body th,
+.article-body td {
+  padding: 0.625rem 0.875rem;
+  border-bottom: 1px solid var(--article-rule);
+  text-align: left;
+  vertical-align: top;
+}
+.article-body th {
+  color: #111111;
+  font-weight: 650;
+  border-bottom-width: 2px;
+}
+
+@media (prefers-color-scheme: dark) {
+  .article-body th {
+    color: #fafafa;
+  }
+}
+
+.article-body tbody tr:last-child td {
+  border-bottom: none;
+}
+
+/*
+ * Body images. `aspect-ratio` from the intrinsic width/height keeps the space
+ * reserved before the image loads, so the text below does not jump — the layout
+ * shift that Core Web Vitals penalises.
+ */
+.article-body img {
+  display: block;
+  height: auto;
+  max-width: 100%;
+  margin: 1.75rem auto;
+  border-radius: 10px;
+}
+
+.article-body figure {
+  margin: 1.75rem 0;
+}
+.article-body figcaption {
+  margin-top: 0.5rem;
+  color: var(--article-muted);
+  font-size: 0.875rem;
+  text-align: center;
+}
+
+.article-body hr {
+  margin: 2.5rem 0;
+  border: 0;
+  border-top: 1px solid var(--article-rule);
+}
