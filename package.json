@@ -1,6 +1,6 @@
 {
   "name": "@rankveo/next",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "Run your rankveo blog on a Next.js site. SEO, GEO and AEO content, served from your own domain.",
   "license": "MIT",
   "author": "rankveo",
@@ -38,7 +38,7 @@
     "access": "public"
   },
   "dependencies": {
-    "@rankveo/client": "^0.2.0"
+    "@rankveo/client": "^0.2.1"
   },
   "keywords": [
     "rankveo",
