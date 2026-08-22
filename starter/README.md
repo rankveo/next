@@ -20,12 +20,12 @@ URL, and the page size. Everything else follows from those.
 | `tag/[slug]/page.tsx` | Tag listing |
 | `sitemap.ts` | `/blog/sitemap.xml`, including image entries |
 | `ArticleCard.tsx`, `Pagination.tsx` | Listing pieces |
-| `article.css` | Styles the article HTML. See below. |
+| `blog.css` | Styles the article HTML. See below. |
 | `../api/rankveo/revalidate/route.ts` | Lets rankveo push cache invalidation on publish |
 
-## About `article.css`
+## About `blog.css`
 
-Article bodies come back as HTML. `article.css` styles them under a single
+Article bodies come back as HTML. `blog.css` styles them under a single
 `.article-body` class, with no framework dependency — edit it to match your
 design system.
 

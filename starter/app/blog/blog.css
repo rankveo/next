@@ -1,0 +1,513 @@
+/*
+ * Styles the whole blog, not just the article body: listing, cards, pagination,
+ * article page, tags and related posts.
+ *
+ * Framework-free on purpose — the same file ships with every rankveo
+ * integration, so it cannot assume Tailwind, a reset, or a design system. It
+ * also re-asserts the element defaults a reset removes: most resets, Tailwind's
+ * preflight included, strip list markers and flatten heading sizes, which
+ * renders a well-structured article as one undifferentiated wall of text.
+ *
+ * Everything is scoped under .blog-index / .blog-article / .article-body, so
+ * nothing here can leak into the rest of your site. Edit freely — this is meant
+ * to be a starting point, not a dependency.
+ */
+
+.blog-index,
+.blog-article {
+  --blog-text: #18181b;
+  --blog-muted: #52525b;
+  --blog-faint: #8b8b93;
+  --blog-rule: #e4e4e7;
+  --blog-surface: #f6f6f7;
+  --blog-accent: #1d4ed8;
+  --blog-radius: 14px;
+  --blog-measure: 42rem;
+
+  /* width, not just max-width: a flex-column body (the usual sticky-footer
+     layout) makes the auto margins cancel stretch, and the blog shrink-wraps
+     to its content instead of filling the page. */
+  width: 100%;
+  max-width: 68rem;
+  margin: 0 auto;
+  padding: clamp(2.5rem, 6vw, 4.5rem) 1.5rem clamp(4rem, 8vw, 6rem);
+  color: var(--blog-text);
+  font-size: 1rem;
+  line-height: 1.6;
+}
+
+/* Zero specificity, so your own font rule wins without needing !important —
+   but a blog dropped into a bare project does not render as browser-default
+   serif either. */
+:where(.blog-index, .blog-article) {
+  font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto,
+    "Helvetica Neue", Arial, sans-serif;
+}
+
+@media (prefers-color-scheme: dark) {
+  .blog-index,
+  .blog-article {
+    --blog-text: #ededef;
+    --blog-muted: #a1a1aa;
+    --blog-faint: #71717a;
+    --blog-rule: #2a2a2e;
+    --blog-surface: #1a1a1d;
+    --blog-accent: #93b4ff;
+  }
+}
+
+/* ── Listing ─────────────────────────────────────────────────────────────── */
+
+.blog-index > header {
+  margin-bottom: clamp(2rem, 4vw, 3rem);
+  padding-bottom: 1.75rem;
+  border-bottom: 1px solid var(--blog-rule);
+}
+
+.blog-index > header h1 {
+  margin: 0 0 0.5rem;
+  font-size: clamp(2rem, 5vw, 3rem);
+  font-weight: 680;
+  line-height: 1.05;
+  letter-spacing: -0.03em;
+}
+
+.blog-index > header p {
+  margin: 0;
+  color: var(--blog-faint);
+  font-size: 0.9rem;
+}
+
+.blog-index > header a {
+  display: inline-block;
+  margin-bottom: 0.75rem;
+  color: var(--blog-muted);
+  font-size: 0.875rem;
+  text-decoration: none;
+}
+
+.blog-index > header a:hover {
+  color: var(--blog-text);
+}
+
+.blog-grid {
+  display: grid;
+  gap: clamp(1.75rem, 3vw, 2.5rem);
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 19rem), 1fr));
+}
+
+.blog-card {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.blog-card > a:first-child {
+  display: block;
+  margin-bottom: 1rem;
+  overflow: hidden;
+  border-radius: var(--blog-radius);
+  background: var(--blog-surface);
+}
+
+.blog-card img {
+  display: block;
+  width: 100%;
+  /* Without this the intrinsic height attribute wins and aspect-ratio never
+     applies, so a portrait image blows the card out of the grid. */
+  height: auto;
+  /* A consistent card shape whatever the writer uploaded, and space reserved
+     before it loads so the text below does not jump. */
+  aspect-ratio: 16 / 10;
+  object-fit: cover;
+  transition: transform 400ms cubic-bezier(0.2, 0, 0, 1);
+}
+
+.blog-card > a:first-child:hover img {
+  transform: scale(1.03);
+}
+
+.blog-card-category {
+  display: block;
+  margin-bottom: 0.45rem;
+  color: var(--blog-accent);
+  font-size: 0.73rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.blog-card h2 {
+  margin: 0 0 0.5rem;
+  font-size: 1.15rem;
+  font-weight: 620;
+  line-height: 1.3;
+  letter-spacing: -0.015em;
+  text-wrap: balance;
+}
+
+.blog-card h2 a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.blog-card h2 a:hover {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.blog-card p {
+  margin: 0 0 0.9rem;
+  color: var(--blog-muted);
+  font-size: 0.92rem;
+  line-height: 1.55;
+  /* Three lines, so cards in a row stay visually even without forcing height. */
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.blog-meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: auto;
+  color: var(--blog-faint);
+  font-size: 0.8rem;
+}
+
+.blog-meta > * + *::before {
+  content: "·";
+  margin-right: 0.5rem;
+}
+
+/* ── Pagination ──────────────────────────────────────────────────────────── */
+
+.blog-pagination {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-top: clamp(2.5rem, 5vw, 4rem);
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--blog-rule);
+  font-size: 0.9rem;
+}
+
+.blog-pagination a {
+  padding: 0.55rem 1rem;
+  border: 1px solid var(--blog-rule);
+  border-radius: 9px;
+  color: inherit;
+  text-decoration: none;
+  transition: background 180ms ease, border-color 180ms ease;
+}
+
+.blog-pagination a:hover {
+  background: var(--blog-surface);
+  border-color: var(--blog-faint);
+}
+
+.blog-pagination > span:not(:has(a)) {
+  color: var(--blog-faint);
+}
+
+/* ── Article ─────────────────────────────────────────────────────────────── */
+
+.blog-article {
+  max-width: calc(var(--blog-measure) + 3rem);
+}
+
+.blog-article > nav {
+  margin-bottom: 2rem;
+  font-size: 0.875rem;
+}
+
+.blog-article > nav a {
+  color: var(--blog-muted);
+  text-decoration: none;
+}
+
+.blog-article > nav a:hover {
+  color: var(--blog-text);
+}
+
+.blog-article > header {
+  margin-bottom: 2rem;
+}
+
+.blog-article > header > a {
+  display: inline-block;
+  margin-bottom: 0.7rem;
+  color: var(--blog-accent);
+  font-size: 0.73rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  text-decoration: none;
+}
+
+.blog-article > header h1 {
+  margin: 0 0 0.9rem;
+  font-size: clamp(2rem, 5vw, 2.9rem);
+  font-weight: 680;
+  line-height: 1.08;
+  letter-spacing: -0.03em;
+  text-wrap: balance;
+}
+
+.blog-hero {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+  margin: 0 0 2.5rem;
+  border-radius: var(--blog-radius);
+  background: var(--blog-surface);
+}
+
+.blog-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 3rem;
+  padding-top: 2rem;
+  border-top: 1px solid var(--blog-rule);
+}
+
+.blog-tags a {
+  padding: 0.35rem 0.8rem;
+  border: 1px solid var(--blog-rule);
+  border-radius: 999px;
+  color: var(--blog-muted);
+  font-size: 0.8rem;
+  text-decoration: none;
+  transition: background 180ms ease, color 180ms ease;
+}
+
+.blog-tags a:hover {
+  background: var(--blog-surface);
+  color: var(--blog-text);
+}
+
+.blog-related {
+  margin-top: 3rem;
+  padding-top: 2rem;
+  border-top: 1px solid var(--blog-rule);
+}
+
+.blog-related h2 {
+  margin: 0 0 1.25rem;
+  font-size: 1.05rem;
+  font-weight: 620;
+  letter-spacing: -0.01em;
+}
+
+.blog-related ul {
+  display: grid;
+  gap: 0.9rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 14rem), 1fr));
+}
+
+.blog-related a {
+  color: inherit;
+  font-size: 0.95rem;
+  font-weight: 550;
+  line-height: 1.4;
+  text-decoration: none;
+}
+
+.blog-related a:hover {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+/* ── Article body ────────────────────────────────────────────────────────────
+   The HTML rankveo returns. Everything below re-asserts what a CSS reset
+   removes, which is why this file matters even on a styled site. */
+
+.article-body {
+  color: var(--blog-text);
+  font-size: 1.0625rem;
+  line-height: 1.75;
+  overflow-wrap: break-word;
+}
+
+.article-body h2,
+.article-body h3,
+.article-body h4 {
+  color: var(--blog-text);
+  font-weight: 650;
+  line-height: 1.25;
+  letter-spacing: -0.015em;
+  scroll-margin-top: 5rem;
+  text-wrap: balance;
+}
+
+.article-body h2 {
+  margin: 2.5rem 0 1rem;
+  font-size: 1.5rem;
+}
+
+.article-body h3 {
+  margin: 2rem 0 0.75rem;
+  font-size: 1.2rem;
+}
+
+.article-body h4 {
+  margin: 1.75rem 0 0.5rem;
+  font-size: 1.05rem;
+}
+
+.article-body > *:first-child {
+  margin-top: 0;
+}
+
+.article-body p {
+  margin: 0 0 1.25rem;
+}
+
+.article-body strong,
+.article-body b {
+  font-weight: 650;
+}
+
+.article-body em,
+.article-body i {
+  font-style: italic;
+}
+
+.article-body a {
+  color: var(--blog-accent);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.article-body a:hover {
+  text-decoration-thickness: 2px;
+}
+
+/* Markers restored: a reset removes them, and a numbered procedure without its
+   numbers stops being a procedure. */
+.article-body ul,
+.article-body ol {
+  margin: 0 0 1.25rem;
+  padding-left: 1.5rem;
+}
+
+.article-body ul {
+  list-style: disc;
+}
+
+.article-body ol {
+  list-style: decimal;
+}
+
+.article-body li {
+  margin: 0.375rem 0;
+  padding-left: 0.25rem;
+}
+
+.article-body li::marker {
+  color: var(--blog-faint);
+}
+
+.article-body li > ul,
+.article-body li > ol {
+  margin: 0.375rem 0 0.5rem;
+}
+
+.article-body blockquote {
+  margin: 1.75rem 0;
+  padding: 0.25rem 0 0.25rem 1.25rem;
+  border-left: 3px solid var(--blog-rule);
+  color: var(--blog-muted);
+  font-style: italic;
+}
+
+.article-body blockquote p:last-child {
+  margin-bottom: 0;
+}
+
+.article-body code {
+  padding: 0.15em 0.4em;
+  border-radius: 4px;
+  background: var(--blog-surface);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 0.875em;
+}
+
+.article-body pre {
+  margin: 1.75rem 0;
+  padding: 1.1rem 1.3rem;
+  border-radius: 10px;
+  background: var(--blog-surface);
+  /* Long lines scroll inside the block rather than widening the page. */
+  overflow-x: auto;
+}
+
+.article-body pre code {
+  padding: 0;
+  background: none;
+  font-size: 0.875rem;
+}
+
+/* A comparison table is what an AI answer lifts out of a page, so it has to
+   survive a narrow screen rather than blowing out the layout. */
+.article-body table {
+  display: block;
+  max-width: 100%;
+  margin: 1.75rem 0;
+  border-collapse: collapse;
+  font-size: 0.9375rem;
+  overflow-x: auto;
+  white-space: nowrap;
+}
+
+.article-body th,
+.article-body td {
+  padding: 0.65rem 0.9rem;
+  border-bottom: 1px solid var(--blog-rule);
+  text-align: left;
+  vertical-align: top;
+}
+
+.article-body th {
+  border-bottom-width: 2px;
+  font-weight: 650;
+}
+
+.article-body tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.article-body img {
+  display: block;
+  height: auto;
+  max-width: 100%;
+  margin: 1.75rem auto;
+  border-radius: 10px;
+}
+
+.article-body figure {
+  margin: 1.75rem 0;
+}
+
+.article-body figcaption {
+  margin-top: 0.5rem;
+  color: var(--blog-muted);
+  font-size: 0.875rem;
+  text-align: center;
+}
+
+.article-body hr {
+  margin: 2.5rem 0;
+  border: 0;
+  border-top: 1px solid var(--blog-rule);
+}

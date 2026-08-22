@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { formatPublishedDate } from '@rankveo/next';
 import { BLOG_BASE_PATH, SITE_URL, blog } from '../rankveo';
-import '../article.css';
+import '../blog.css';
 
 export const revalidate = 3600;
 
@@ -79,38 +79,37 @@ export default async function ArticlePage({ params }: { params: Params }) {
   };
 
   return (
-    <main className="mx-auto w-full max-w-3xl px-6 py-16">
+    <main className="blog-article">
       <script
         type="application/ld+json"
         // Serialized server-side from our own API response, not user input.
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
 
-      <nav className="mb-8 text-sm">
-        <Link href={BLOG_BASE_PATH} className="text-neutral-500 hover:underline">
+      <nav>
+        <Link href={BLOG_BASE_PATH} >
           ← All articles
         </Link>
       </nav>
 
-      <header className="mb-10">
+      <header>
         {article.category ? (
           <Link
             href={`${BLOG_BASE_PATH}?category=${article.category.slug}`}
-            className="text-xs font-medium uppercase tracking-wide text-neutral-500 hover:underline"
+            
           >
             {article.category.name}
           </Link>
         ) : null}
 
-        <h1 className="mt-3 text-4xl font-semibold leading-tight tracking-tight">
+        <h1>
           {article.title}
         </h1>
 
-        <div className="mt-4 flex flex-wrap items-center gap-2 text-sm text-neutral-500">
+        <div className="blog-meta">
           {published ? (
             <time dateTime={article.publishedAt ?? undefined}>{published}</time>
           ) : null}
-          {published ? <span aria-hidden="true">·</span> : null}
           <span>{article.readingTime} min read</span>
         </div>
       </header>
@@ -136,7 +135,7 @@ export default async function ArticlePage({ params }: { params: Params }) {
 
       {/*
         The API returns the article body as HTML with no wrapper element, so it
-        goes straight in. `article-body` (see ../article.css) styles it without
+        goes straight in. `article-body` (see ../blog.css) styles it without
         depending on a Tailwind plugin — a CSS reset would otherwise flatten the
         headings and strip the list markers.
       */}
@@ -146,12 +145,12 @@ export default async function ArticlePage({ params }: { params: Params }) {
       />
 
       {article.tags.length > 0 ? (
-        <footer className="mt-12 flex flex-wrap gap-2 border-t border-neutral-200 pt-8 dark:border-neutral-800">
+        <footer className="blog-tags">
           {article.tags.map((tag) => (
             <Link
               key={tag.slug}
               href={`${BLOG_BASE_PATH}/tag/${tag.slug}`}
-              className="rounded-full border border-neutral-200 px-3 py-1 text-xs hover:bg-neutral-50 dark:border-neutral-800 dark:hover:bg-neutral-900"
+              
             >
               {tag.name}
             </Link>
@@ -160,14 +159,14 @@ export default async function ArticlePage({ params }: { params: Params }) {
       ) : null}
 
       {article.relatedPosts.length > 0 ? (
-        <section className="mt-16 border-t border-neutral-200 pt-10 dark:border-neutral-800">
-          <h2 className="mb-6 text-xl font-semibold">Keep reading</h2>
-          <ul className="grid gap-4 sm:grid-cols-3">
+        <section className="blog-related">
+          <h2>Keep reading</h2>
+          <ul>
             {article.relatedPosts.map((related) => (
               <li key={related.id}>
                 <Link
                   href={`${BLOG_BASE_PATH}/${related.slug}`}
-                  className="text-sm font-medium hover:underline"
+                  
                 >
                   {related.title}
                 </Link>

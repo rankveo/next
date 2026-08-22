@@ -66,7 +66,7 @@ using it is pre-rendered.
 
 ## Article styling
 
-`starter/app/blog/article.css` styles the article HTML under `.article-body`. It
+`starter/app/blog/blog.css` styles the article HTML under `.article-body`. It
 has no dependencies and is meant to be edited.
 
 Do not drop it and rely on your own reset. Tailwind's preflight — and most other

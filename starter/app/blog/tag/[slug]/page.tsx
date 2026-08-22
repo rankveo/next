@@ -5,6 +5,7 @@ import { pageCount } from '@rankveo/next';
 import { ArticleCard } from '../../ArticleCard';
 import { Pagination } from '../../Pagination';
 import { BLOG_BASE_PATH, PAGE_SIZE, SITE_URL, blog, toApiPage } from '../../rankveo';
+import '../../blog.css';
 
 export const revalidate = 3600;
 
