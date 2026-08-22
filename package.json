@@ -1,10 +1,10 @@
 {
   "name": "@rankveo/next",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "description": "Run your rankveo blog on a Next.js site. SEO, GEO and AEO content, served from your own domain.",
   "license": "MIT",
   "author": "rankveo",
-  "homepage": "https://rankveo.com",
+  "homepage": "https://rankveo.com/next",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/rankveo/next.git"

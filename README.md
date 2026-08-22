@@ -1,6 +1,6 @@
 # @rankveo/next
 
-Run your [rankveo](https://rankveo.com) blog on a Next.js App Router site.
+Run your [rankveo](https://rankveo.com/next) blog on a Next.js App Router site.
 rankveo is the CMS: you approve and publish there, your site reads the article
 and renders it under your own domain, design, and URLs. Nothing to sync, no
 second copy of the content.
@@ -101,5 +101,9 @@ immediately.
 
 Built on [`@rankveo/client`](https://github.com/rankveo/client), which works in
 any JavaScript runtime.
+
+---
+
+[Docs and setup guide](https://rankveo.com/next) · [All integrations](https://rankveo.com)
 
 MIT.
